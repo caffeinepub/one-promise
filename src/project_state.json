@@ -1,0 +1,204 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 20,
+  "summary": "One Promise is a minimal, calming self-reflection PWA where users set one daily promise, reflect with a simple thumbs up/down, enter rest mode until 06:00, and review weekly/history; light cream/off-white monochrome styling with hand-sketched assets and subtle fade/slide animations.",
+  "existing_features": [
+    {
+      "id": "IF-1",
+      "title": "Light monochrome UI theme (light-mode only)",
+      "synonyms": [
+        "UI styling requirement",
+        "avoid AI purple"
+      ],
+      "description": "Implemented light-only, calming monochrome styling consistent with the spec (no purple scheme).",
+      "reqIds": [
+        "AR-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "IF-2",
+      "title": "Onboarding flow with optional 3-screen Learn More carousel",
+      "synonyms": [
+        "splash",
+        "Learn More carousel"
+      ],
+      "description": "Onboarding screen(s) implemented with carousel-based learn-more flow and transitions per spec.",
+      "reqIds": [
+        "AR-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "IF-3",
+      "title": "Today screen promise flow (create + reflect)",
+      "synonyms": [
+        "promise creation",
+        "thumbs up/down reflection"
+      ],
+      "description": "Today screen implemented with promise creation state and active state that shows the promise and allows thumbs up/down reflection.",
+      "reqIds": [
+        "AR-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "IF-4",
+      "title": "Rest Mode after reflection with lock until 06:00",
+      "synonyms": [
+        "quiet state",
+        "rest mode persistence"
+      ],
+      "description": "After reflecting, the app enters a rest/quiet mode and remains locked until the next 06:00 boundary.",
+      "reqIds": [
+        "AR-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "IF-5",
+      "title": "Local-first data storage client (offline-capable)",
+      "synonyms": [
+        "PWA local-first storage",
+        "offline storage"
+      ],
+      "description": "Implemented a storage client to persist promises/reflections locally (offline-capable).",
+      "reqIds": [
+        "AR-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "IF-6",
+      "title": "Temporary testing shortcut: tapping TODAY re-opens onboarding",
+      "synonyms": [
+        "Promptathon testing shortcut"
+      ],
+      "description": "Implemented the temporary testing shortcut where tapping the TODAY title returns to onboarding to allow setting a new promise without waiting for the next day.",
+      "reqIds": [
+        "AR-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "IF-7",
+      "title": "Internet Identity auth + backend canister actor integration (ICP template scaffolding)",
+      "synonyms": [
+        "Internet Identity login",
+        "useActor hook",
+        "Motoko backend integration"
+      ],
+      "description": "Project now includes Internet Identity authentication hooks and backend canister actor wiring (Motoko backend + frontend actor/useInternetIdentity/useActor) as part of the ICP app template/infrastructure.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-today-page-so-that-after-a-user-creates-saves-a-promise-the-ui-shows-the-reflection-controls-thumbs-up-and-thumbs-down-instead-of-an-edit-promise-button-and-the-promise-text-is-not-editable-after-creation",
+      "title": "Update the Today page so that after a user creates/saves a promise, the UI shows the reflection controls (thumbs up and thumbs down) instead of an “Edit Promise” button, and the promise text is not editable after creation.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-5",
+      "summary": "History/Journal: weekly summary (kept X of Y last 7 days) and full vertical list of date + promise + outcome icon; journal icon access from Today screen",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Notifications: 08:30 daily reminder to set promise; 20:00 reminder to reflect only if a promise was set; notification click navigates to promise screen",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Analytics: GA4 integration tracking promise_created, reflection_yes, reflection_no, history_viewed",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "architecturalNotes": [
+    "Implement as installable, local-first PWA (offline-capable storage for promises/reflections).",
+    "State machine for Today screen: creation -> active -> rest mode; rest mode persists until 06:00 local time next day.",
+    "Notifications scheduling: 08:30 always; 20:00 conditional on promise existing; notification tap deep-links to Today/promise screen.",
+    "GA4 event instrumentation: promise_created, reflection_yes, reflection_no, history_viewed.",
+    "Use user’s local timezone for day boundaries, 06:00 rest-mode reset, and notification scheduling.",
+    "Enforce exactly one promise per day (except the temporary testing shortcut).",
+    "Promise text is locked after creation; no editing before reflection.",
+    "Rest Mode must persist across app close/reopen until 06:00 next day.",
+    "If user does not reflect before 06:00, leave the day unreflected (do not auto-mark missed).",
+    "Weekly summary is calendar week (Mon–Sun), not rolling 7 days.",
+    "History UI: unreflected days show a dash (—) instead of a thumb outcome icon.",
+    "Testing shortcut behavior: tapping “TODAY” shows the start of the onboarding carousel again.",
+    "“Learn More” is not accessible after initial onboarding (no re-entry point in-app).",
+    "Request notification permission when the user lands on the promise screen for the first time.",
+    "20:00 evening reminder is skipped entirely if no promise was set.",
+    "GA4 analytics are anonymous-only; track strictly the 4 events (promise_created, reflection_yes, reflection_no, history_viewed).",
+    "Lock background color to #F2F5F7 (light mode only).",
+    "Typography: Playfair Display acceptable for headers; clean sans-serif (e.g., Inter) for body text.",
+    "Frontend includes generated hand-sketched-style assets (sun/moon/zen stones, journal icon, thumbs up/down, favicon) stored under frontend/public/assets/generated.",
+    "ICP canister infrastructure is present (Motoko backend + frontend actor wiring) with Internet Identity authentication hooks available in the frontend.",
+    "Persist promises/reflections to ICP canister backend once authenticated (retain local-first UX/offline-first behavior; backend enables cross-session/device continuity).",
+    "Auth gating: prompt Internet Identity login when user taps “Get Started” for the first time; keep user logged in across sessions unless they explicitly log out."
+  ],
+  "knownIssues": [
+    "Bug: After creating a promise, UI shows an Edit button instead of the required thumbs up/down reflection buttons; promise text should not be editable after creation.",
+    "Bug (previously reported): Promise input textbox on promise screen was disabled and showed 'Promise creation coming soon...' message.",
+    "Bug (previously reported): Placeholder suggestion animation fades in/out the same suggestion instead of fading between successive suggestions in the provided list.",
+    "Bug (previously reported): 'Make Promise' button click did nothing."
+  ],
+  "isFixRequest": true,
+  "generatedImages": [
+    {
+      "filename": "frontend/public/assets/generated/crescent-moon.dim_1200x800.png",
+      "description": "Generated crescent moon background/asset",
+      "targetWidth": 1200,
+      "targetHeight": 800
+    },
+    {
+      "filename": "frontend/public/assets/generated/full-sun.dim_1200x800.png",
+      "description": "Generated full sun background/asset",
+      "targetWidth": 1200,
+      "targetHeight": 800
+    },
+    {
+      "filename": "frontend/public/assets/generated/zen-stones.dim_1200x800.png",
+      "description": "Generated zen stones background/asset",
+      "targetWidth": 1200,
+      "targetHeight": 800
+    },
+    {
+      "filename": "frontend/public/assets/generated/journal-icon.dim_128x128.png",
+      "description": "Generated journal icon",
+      "targetWidth": 128,
+      "targetHeight": 128
+    },
+    {
+      "filename": "frontend/public/assets/generated/thumbs-up.dim_128x128.png",
+      "description": "Generated thumbs up icon",
+      "targetWidth": 128,
+      "targetHeight": 128
+    },
+    {
+      "filename": "frontend/public/assets/generated/thumbs-down.dim_128x128.png",
+      "description": "Generated thumbs down icon",
+      "targetWidth": 128,
+      "targetHeight": 128
+    },
+    {
+      "filename": "frontend/public/assets/generated/favicon.dim_64x64.png",
+      "description": "Generated favicon",
+      "targetWidth": 64,
+      "targetHeight": 64
+    }
+  ],
+  "projectName": "One Promise",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0,
+  "requiresBackendChanges": false,
+  "requiresFrontendChanges": true
+}

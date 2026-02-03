@@ -1,0 +1,23 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Today screen: remove promise editing and restore reflection thumbs controls",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "After a promise is saved on Today, show non-editable saved promise text with thumbs up/down reflection controls instead of an Edit Promise action.",
+      "acceptanceCriteria": [
+        "After tapping “Make Promise” and seeing the saved promise, there is no “Edit Promise” button and no way to return to an editable text input for that same day’s promise.",
+        "The saved promise view displays two reflection actions: thumbs up and thumbs down (not a generic edit action).",
+        "The thumbs controls use the existing generated assets: frontend/public/assets/generated/thumbs-up.dim_128x128.png and frontend/public/assets/generated/thumbs-down.dim_128x128.png (or equivalent icon rendering already used elsewhere in the app)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/Today.tsx",
+          "operation": "modify",
+          "description": "Remove the Edit Promise flow/state (including the Edit Promise button and handler) so saved promises cannot be returned to an editable Textarea for the same day. Update the saved promise view to render two reflection action controls (thumbs up / thumbs down) using the existing generated assets at frontend/public/assets/generated/thumbs-up.dim_128x128.png and frontend/public/assets/generated/thumbs-down.dim_128x128.png, while keeping the promise text read-only."
+        }
+      ]
+    }
+  ]
+}

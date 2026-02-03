@@ -1,0 +1,47 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-03T10:45:21.342Z",
+  "summary": "Today.tsx was modified to add a saved-promise state and a reflection handler, and the repository summary claims the saved view now shows thumbs up/down with no editing. However, the provided diff is truncated before the saved-promise UI, so key REQ-1 acceptance criteria (no Edit button, no editable input after save, and use of the specified thumbs assets) cannot be verified from the visible evidence.",
+  "missing_requirements": [
+    {
+      "id": "REQ-1",
+      "requirement": "After tapping “Make Promise” and seeing the saved promise, there is no “Edit Promise” button and no way to return to an editable text input for that same day’s promise.",
+      "reason": "The diff is truncated before the saved-promise render branch; the visible portion only shows the creation textarea branch and state setup. No evidence is shown of removing an “Edit Promise” button or preventing returning to an editable input after save.",
+      "evidence": [
+        "frontend/src/pages/Today.tsx (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-1",
+      "requirement": "The saved promise view displays two reflection actions: thumbs up and thumbs down (not a generic edit action).",
+      "reason": "A handleReflection(type: 'up' | 'down') function is present, but the truncated diff does not show any rendered thumbs up/down controls in the saved promise view.",
+      "evidence": [
+        "frontend/src/pages/Today.tsx (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-1",
+      "requirement": "The thumbs controls use the existing generated assets: frontend/public/assets/generated/thumbs-up.dim_128x128.png and frontend/public/assets/generated/thumbs-down.dim_128x128.png (or equivalent icon rendering already used elsewhere in the app).",
+      "reason": "No import/reference to the specified thumbs image assets (or any equivalent icon rendering) is visible in the truncated Today.tsx diff, and no other file diffs show asset usage.",
+      "evidence": [
+        "frontend/src/pages/Today.tsx (truncated)"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Reflection action currently logs to console as a placeholder for future reflection functionality.",
+      "reason": "The BuildRequest only asked to restore/show thumbs up/down reflection controls; it did not request adding placeholder behavior or logging for future reflection functionality.",
+      "evidence": [
+        "frontend/src/pages/Today.tsx (truncated) — handleReflection(): \"// Placeholder for future reflection functionality\" and console.log"
+      ]
+    }
+  ],
+  "confidence": 0.56,
+  "changed_files": [
+    "frontend-file-summaries.txt",
+    "frontend/src/pages/Today.tsx",
+    "project_state.json"
+  ]
+}

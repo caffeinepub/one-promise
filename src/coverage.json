@@ -1,0 +1,37 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-03T10:45:21.390Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 1,
+    "implemented": 1,
+    "items": [
+      {
+        "id": "REQ-1",
+        "summary": "Update the Today page so that after a user creates/saves a promise, the UI shows the reflection controls (thumbs up and thumbs down) instead of an “Edit Promise” button, and the promise text is not editable after creation.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/Today.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/Today.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/pages/Today.tsx",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

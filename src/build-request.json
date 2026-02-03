@@ -1,0 +1,38 @@
+{
+  "kind": "build_request",
+  "title": "Fix Today screen: remove Edit Promise option and restore thumbs up/down reflection",
+  "priority": "high",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Update the Today page so that after a user creates/saves a promise, the UI shows the reflection controls (thumbs up and thumbs down) instead of an “Edit Promise” button, and the promise text is not editable after creation.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "it then showed the promise text as expected, but with an edit button instead of the thumbs up and thumbs down buttons. there shouldn't be an option to edit the promise"
+        ]
+      },
+      "acceptanceCriteria": [
+        "After tapping “Make Promise” and seeing the saved promise, there is no “Edit Promise” button and no way to return to an editable text input for that same day’s promise.",
+        "The saved promise view displays two reflection actions: thumbs up and thumbs down (not a generic edit action).",
+        "The thumbs controls use the existing generated assets: frontend/public/assets/generated/thumbs-up.dim_128x128.png and frontend/public/assets/generated/thumbs-down.dim_128x128.png (or equivalent icon rendering already used elsewhere in the app)."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not edit files under frontend/src/components/ui (compose existing UI components instead).",
+    "Do not edit immutable hook files listed in SYSTEM_CONTEXT.immutablePaths."
+  ],
+  "nonGoals": [
+    "Do not add any new promise editing feature or UI entry point.",
+    "Do not change Internet Identity authentication behavior.",
+    "Do not introduce any new backend schema or backend endpoints for this fix."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}
