@@ -3,10 +3,14 @@ import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { LogOut } from 'lucide-react';
 import { useRotatingPromiseSuggestions } from '../hooks/useRotatingPromiseSuggestions';
-import { saveTodayPromise, getTodayPromise, type TodayPromise } from '../utils/todayPromiseStorage';
+import { saveTodayPromise, getTodayPromise, clearTodayPromise, type TodayPromise } from '../utils/todayPromiseStorage';
+import { saveTodayReflection, getTodayReflection, clearTodayReflection } from '../utils/todayReflectionStorage';
+import { saveJournalEntry, updateTodayOutcome, clearJournalHistory, removeTodayEntry, repairHistoryIfNeeded } from '../utils/journalHistoryStorage';
+import { thumbToOutcome, outcomeToThumb, getOutcomeIconAlt, type ThumbSelection, type ReflectionOutcome } from '../utils/outcomeMapping';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import JournalSlideOutPanel from '../components/JournalSlideOutPanel';
+import { ThumbsUpIcon, ThumbsDownIcon } from '../components/icons';
 
 export default function Today() {
   const { clear } = useInternetIdentity();
@@ -16,18 +20,56 @@ export default function Today() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { currentSuggestion, isVisible } = useRotatingPromiseSuggestions();
+  
+  // Reflection state
+  const [reflection, setReflection] = useState<ReflectionOutcome | null>(null);
+  const [isReflecting, setIsReflecting] = useState(false);
+  const [selectedThumb, setSelectedThumb] = useState<ThumbSelection | null>(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
-  // Load existing promise on mount
+  // Journal panel state
+  const [isJournalOpen, setIsJournalOpen] = useState(false);
+
+  // Load existing promise and reflection on mount, and run repair
   useEffect(() => {
-    const existing = getTodayPromise();
-    if (existing) {
-      setSavedPromise(existing);
+    // Run history repair once on mount
+    repairHistoryIfNeeded();
+    
+    const existingPromise = getTodayPromise();
+    if (existingPromise) {
+      setSavedPromise(existingPromise);
+    }
+    
+    const existingReflection = getTodayReflection();
+    if (existingReflection) {
+      setReflection(existingReflection.outcome);
+      setSelectedThumb(outcomeToThumb(existingReflection.outcome));
     }
   }, []);
 
   const handleLogout = async () => {
     await clear();
     queryClient.clear();
+    clearJournalHistory();
+  };
+
+  const handleResetToday = () => {
+    // Clear today's promise
+    clearTodayPromise();
+    
+    // Clear today's reflection
+    clearTodayReflection();
+    
+    // Remove today's journal entry
+    removeTodayEntry();
+    
+    // Reset UI state
+    setSavedPromise(null);
+    setReflection(null);
+    setSelectedThumb(null);
+    setShowConfirmation(false);
+    setPromise('');
+    setError(null);
   };
 
   const handleMakePromise = async () => {
@@ -42,6 +84,7 @@ export default function Today() {
       await new Promise(resolve => setTimeout(resolve, 300));
       
       saveTodayPromise(trimmedPromise);
+      saveJournalEntry(trimmedPromise); // Save to history
       
       setSavedPromise({
         text: trimmedPromise,
@@ -57,9 +100,55 @@ export default function Today() {
     }
   };
 
-  const handleReflection = (type: 'up' | 'down') => {
-    // Placeholder for future reflection functionality
-    console.log(`Reflection: ${type}`);
+  const handleReflection = async (type: ThumbSelection) => {
+    // Prevent double-submission
+    if (isReflecting || reflection) return;
+    
+    setIsReflecting(true);
+    setSelectedThumb(type);
+    
+    try {
+      // Brief delay for visual feedback
+      await new Promise(resolve => setTimeout(resolve, 400));
+      
+      // Use canonical mapping
+      const outcome = thumbToOutcome(type);
+      saveTodayReflection(outcome);
+      updateTodayOutcome(outcome); // Update history
+      setReflection(outcome);
+      
+      // Show confirmation message
+      setShowConfirmation(true);
+      
+      // Transition to rest mode after showing confirmation
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to save reflection. Please try again.');
+      setSelectedThumb(null);
+      setIsReflecting(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent, type: ThumbSelection) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleReflection(type);
+    }
+  };
+
+  // Determine confirmation message
+  const confirmationMessage = selectedThumb === 'up' 
+    ? 'Well done! Rest now until tomorrow.' 
+    : 'Tomorrow is a new day. Rest now.';
+
+  // Check if we're in rest mode (reflection completed)
+  const isRestMode = reflection !== null;
+
+  // Helper to render the appropriate thumb icon
+  const renderThumbIcon = (outcome: ReflectionOutcome, className: string) => {
+    const IconComponent = outcome === 'positive' ? ThumbsUpIcon : ThumbsDownIcon;
+    return <IconComponent className={className} />;
   };
 
   return (
@@ -67,15 +156,51 @@ export default function Today() {
       {/* Header */}
       <header className="w-full px-6 py-6 flex items-center justify-between">
         <h1 className="text-2xl font-serif text-[#2C2C2C] tracking-tight">TODAY</h1>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleLogout}
-          className="text-[#2C2C2C]/60 hover:text-[#2C2C2C] hover:bg-[#2C2C2C]/5"
+        <button
+          onClick={() => setIsJournalOpen(true)}
+          className="p-2 rounded-lg hover:bg-[#2C2C2C]/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2C2C2C]/40 focus-visible:ring-offset-2"
+          aria-label="Open history and journal menu"
         >
-          <LogOut className="h-4 w-4 mr-2" />
-          Log out
-        </Button>
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 32 32"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="opacity-60 hover:opacity-100 transition-opacity"
+          >
+            <line
+              x1="6"
+              y1="10"
+              x2="26"
+              y2="10"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              className="text-[#2C2C2C]"
+            />
+            <line
+              x1="6"
+              y1="16"
+              x2="26"
+              y2="16"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              className="text-[#2C2C2C]"
+            />
+            <line
+              x1="6"
+              y1="22"
+              x2="26"
+              y2="22"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              className="text-[#2C2C2C]"
+            />
+          </svg>
+        </button>
       </header>
 
       {/* Main Content */}
@@ -126,44 +251,119 @@ export default function Today() {
                 </Button>
               </div>
             </>
+          ) : isRestMode ? (
+            // Rest Mode - locked state after reflection
+            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+              <div className="space-y-4">
+                <p className="text-xl text-[#2C2C2C]/70 font-light">
+                  Your promise for today:
+                </p>
+                <p className="text-2xl text-[#2C2C2C] font-serif leading-relaxed">
+                  "{savedPromise.text}"
+                </p>
+                
+                {/* Show selected thumb icon centered under promise */}
+                {reflection && (
+                  <div className="flex justify-center pt-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                    <div className="w-16 h-16 text-[#2C2C2C] opacity-70" aria-label={getOutcomeIconAlt(reflection)}>
+                      {renderThumbIcon(reflection, 'w-full h-full')}
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <div className="pt-4">
+                <p className="text-lg text-[#2C2C2C]/60 font-light">
+                  {reflection === 'positive' 
+                    ? 'Self-trust is built on small promises.' 
+                    : 'Tomorrow is a new day.'}
+                </p>
+              </div>
+            </div>
           ) : (
+            // Active reflection controls
             <div className="space-y-8 animate-in fade-in duration-700">
               <div className="space-y-4">
                 <p className="text-xl text-[#2C2C2C]/70 font-light">
                   Your promise for today:
                 </p>
-                <div className="bg-white/50 border border-[#2C2C2C]/20 rounded-lg p-8">
-                  <p className="text-2xl text-[#2C2C2C] font-serif leading-relaxed">
-                    "{savedPromise.text}"
-                  </p>
-                </div>
+                <p className="text-2xl text-[#2C2C2C] font-serif leading-relaxed">
+                  "{savedPromise.text}"
+                </p>
               </div>
               
-              <div className="flex items-center justify-center gap-8 pt-4">
-                <button
-                  onClick={() => handleReflection('down')}
-                  className="group transition-transform hover:scale-110 active:scale-95"
-                  aria-label="Thumbs down"
-                >
-                  <img
-                    src="/assets/generated/thumbs-down.dim_128x128.png"
-                    alt="Thumbs down"
-                    className="w-16 h-16 opacity-60 group-hover:opacity-100 transition-opacity"
-                  />
-                </button>
-                
-                <button
-                  onClick={() => handleReflection('up')}
-                  className="group transition-transform hover:scale-110 active:scale-95"
-                  aria-label="Thumbs up"
-                >
-                  <img
-                    src="/assets/generated/thumbs-up.dim_128x128.png"
-                    alt="Thumbs up"
-                    className="w-16 h-16 opacity-60 group-hover:opacity-100 transition-opacity"
-                  />
-                </button>
-              </div>
+              {showConfirmation ? (
+                <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  <p className="text-lg text-[#2C2C2C]/70 font-light">
+                    {confirmationMessage}
+                  </p>
+                  
+                  {/* Show selected thumb icon centered during confirmation */}
+                  {selectedThumb && (
+                    <div className="flex justify-center animate-in fade-in slide-in-from-bottom-2 duration-500 delay-200">
+                      <div className="w-16 h-16 text-[#2C2C2C] opacity-70" aria-label={getOutcomeIconAlt(thumbToOutcome(selectedThumb))}>
+                        {renderThumbIcon(thumbToOutcome(selectedThumb), 'w-full h-full')}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex items-center justify-center gap-8 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => handleReflection('down')}
+                    onKeyDown={(e) => handleKeyDown(e, 'down')}
+                    disabled={isReflecting}
+                    className={`group transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2C2C2C]/40 focus-visible:ring-offset-2 rounded-lg ${
+                      selectedThumb === 'down' 
+                        ? 'thumb-selected' 
+                        : selectedThumb === 'up' 
+                        ? 'thumb-deselected' 
+                        : 'hover:scale-110 active:scale-95'
+                    }`}
+                    aria-label="I did not keep my promise today"
+                  >
+                    <div
+                      className={`w-16 h-16 text-[#2C2C2C] transition-opacity duration-300 ${
+                        selectedThumb === 'down' 
+                          ? 'opacity-100' 
+                          : selectedThumb === 'up' 
+                          ? 'opacity-20' 
+                          : 'opacity-60 group-hover:opacity-100'
+                      }`}
+                    >
+                      <ThumbsDownIcon className="w-full h-full" />
+                    </div>
+                  </button>
+                  
+                  <button
+                    type="button"
+                    onClick={() => handleReflection('up')}
+                    onKeyDown={(e) => handleKeyDown(e, 'up')}
+                    disabled={isReflecting}
+                    className={`group transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2C2C2C]/40 focus-visible:ring-offset-2 rounded-lg ${
+                      selectedThumb === 'up' 
+                        ? 'thumb-selected' 
+                        : selectedThumb === 'down' 
+                        ? 'thumb-deselected' 
+                        : 'hover:scale-110 active:scale-95'
+                    }`}
+                    aria-label="I kept my promise today"
+                  >
+                    <div
+                      className={`w-16 h-16 text-[#2C2C2C] transition-opacity duration-300 ${
+                        selectedThumb === 'up' 
+                          ? 'opacity-100' 
+                          : selectedThumb === 'down' 
+                          ? 'opacity-20' 
+                          : 'opacity-60 group-hover:opacity-100'
+                      }`}
+                    >
+                      <ThumbsUpIcon className="w-full h-full" />
+                    </div>
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -183,6 +383,14 @@ export default function Today() {
           </a>
         </p>
       </footer>
+
+      {/* Journal Slide-Out Panel */}
+      <JournalSlideOutPanel
+        isOpen={isJournalOpen}
+        onClose={() => setIsJournalOpen(false)}
+        onLogout={handleLogout}
+        onResetToday={handleResetToday}
+      />
     </div>
   );
 }

@@ -1,10 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Fix the Today screen so a saved promise cannot be edited and shows the intended reflection controls.
+**Goal:** Update the app’s thumbs-up and thumbs-down inline React icon components to exactly match the user-uploaded `thumb-up.svg` and `thumb-down.svg` designs, and ensure those components are used everywhere thumbs appear.
 
 **Planned changes:**
-- Update the Today page saved-promise UI to remove the “Edit Promise” button and prevent returning to an editable input for that same day’s promise.
-- Restore the reflection actions on the saved promise view using the existing thumbs up/down assets (or the equivalent icon rendering already used elsewhere in the app).
+- Replace the placeholder/generated SVG markup in `frontend/src/components/icons/ThumbsUpIcon.tsx` with the exact SVG markup from `thumb-up.svg`, preserving `className` support on the root `<svg>`.
+- Replace the placeholder/generated SVG markup in `frontend/src/components/icons/ThumbsDownIcon.tsx` with the exact SVG markup from `thumb-down.svg`, preserving `className` support on the root `<svg>`.
+- Verify the Today screen and History/Journal UI render thumbs exclusively via `ThumbsUpIcon` / `ThumbsDownIcon` (no fallback to older/generated thumb SVGs or image paths).
 
-**User-visible outcome:** After making a promise, the user sees a non-editable saved promise with thumbs up and thumbs down reflection controls, and no option to edit that day’s promise.
+**User-visible outcome:** Thumbs icons on the Today screen and in History/Journal match the uploaded SVG designs and still respond to existing Tailwind sizing/color classes.

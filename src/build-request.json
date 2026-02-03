@@ -1,35 +1,68 @@
 {
   "kind": "build_request",
-  "title": "Fix Today screen: remove Edit Promise option and restore thumbs up/down reflection",
-  "priority": "high",
+  "title": "Embed user-uploaded thumb-up.svg and thumb-down.svg into inline React icon components",
+  "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-1",
-      "text": "Update the Today page so that after a user creates/saves a promise, the UI shows the reflection controls (thumbs up and thumbs down) instead of an “Edit Promise” button, and the promise text is not editable after creation.",
+      "id": "REQ-33",
+      "text": "Replace the current placeholder/generated SVG markup inside `frontend/src/components/icons/ThumbsUpIcon.tsx` with the exact SVG markup from the user-uploaded file `thumb-up.svg`, preserving the component’s `className` support and ensuring the rendered icon matches the uploaded design.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-20"
         ],
         "quotes": [
-          "it then showed the promise text as expected, but with an edit button instead of the thumbs up and thumbs down buttons. there shouldn't be an option to edit the promise"
+          "thumb-up.svg and thumb-down.svg"
         ]
       },
       "acceptanceCriteria": [
-        "After tapping “Make Promise” and seeing the saved promise, there is no “Edit Promise” button and no way to return to an editable text input for that same day’s promise.",
-        "The saved promise view displays two reflection actions: thumbs up and thumbs down (not a generic edit action).",
-        "The thumbs controls use the existing generated assets: frontend/public/assets/generated/thumbs-up.dim_128x128.png and frontend/public/assets/generated/thumbs-down.dim_128x128.png (or equivalent icon rendering already used elsewhere in the app)."
+        "`ThumbsUpIcon` renders the same shape/design as `thumb-up.svg` (not the current placeholder strokes).",
+        "`ThumbsUpIcon` still accepts `className` and applies it to the root `<svg>` element (or equivalent wrapper) so sizing/color can be controlled by existing Tailwind classes."
+      ]
+    },
+    {
+      "id": "REQ-34",
+      "text": "Replace the current placeholder/generated SVG markup inside `frontend/src/components/icons/ThumbsDownIcon.tsx` with the exact SVG markup from the user-uploaded file `thumb-down.svg`, preserving the component’s `className` support and ensuring the rendered icon matches the uploaded design.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-20"
+        ],
+        "quotes": [
+          "thumb-up.svg and thumb-down.svg"
+        ]
+      },
+      "acceptanceCriteria": [
+        "`ThumbsDownIcon` renders the same shape/design as `thumb-down.svg` (not the current placeholder strokes).",
+        "`ThumbsDownIcon` still accepts `className` and applies it to the root `<svg>` element (or equivalent wrapper) so sizing/color can be controlled by existing Tailwind classes."
+      ]
+    },
+    {
+      "id": "REQ-35",
+      "text": "Ensure the app uses these updated inline SVG components everywhere thumbs appear on the Today screen and History/Journal UI (no fallback to any older/generated thumb SVGs or image paths).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-20"
+        ],
+        "quotes": [
+          "thumb-up.svg and thumb-down.svg"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Today screen thumb UI renders using `ThumbsUpIcon`/`ThumbsDownIcon` and visually matches the uploaded SVG designs.",
+        "History/Journal thumb outcome icons render using `ThumbsUpIcon`/`ThumbsDownIcon` and visually match the uploaded SVG designs."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under frontend/src/components/ui (compose existing UI components instead).",
-    "Do not edit immutable hook files listed in SYSTEM_CONTEXT.immutablePaths."
+    "Do not edit any files under `frontend/src/components/ui` (compose existing shadcn components instead).",
+    "Do not edit files in `frontend/src/hooks/useInternetIdentity.ts`, `frontend/src/hooks/useInternetIdentity.tsx`, `frontend/src/hooks/useActor.ts`, or `frontend/src/main.tsx`."
   ],
   "nonGoals": [
-    "Do not add any new promise editing feature or UI entry point.",
-    "Do not change Internet Identity authentication behavior.",
-    "Do not introduce any new backend schema or backend endpoints for this fix."
+    "Do not change onboarding slide images or their asset paths.",
+    "Do not introduce new PNG thumb assets or switch thumbs back to runtime-loaded `<img>` assets.",
+    "Do not change backend (Motoko) behavior."
   ],
   "imageRequirements": {
     "required": [],

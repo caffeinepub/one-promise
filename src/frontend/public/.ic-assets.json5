@@ -1,0 +1,45 @@
+[
+  {
+    "match": "favicon.png",
+    "cache": {
+      "max_age": 86400
+    },
+    "headers": {
+      "Cache-Control": "public, max-age=86400"
+    }
+  },
+  {
+    "match": "assets/generated/thumbs-up.dim_128x128.png",
+    "cache": {
+      "max_age": 0
+    },
+    "headers": {
+      "Cache-Control": "no-cache, no-store, must-revalidate"
+    }
+  },
+  {
+    "match": "assets/generated/thumbs-down.dim_128x128.png",
+    "cache": {
+      "max_age": 0
+    },
+    "headers": {
+      "Cache-Control": "no-cache, no-store, must-revalidate"
+    }
+  },
+  {
+    "match": "assets/generated/*.png",
+    "cache": {
+      "max_age": 86400
+    },
+    "headers": {
+      "Cache-Control": "public, max-age=86400"
+    }
+  },
+  {
+    "match": "*",
+    "cache": {
+      "max_age": 86400
+    }
+  }
+]
+

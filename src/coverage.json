@@ -1,34 +1,58 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-03T10:45:21.390Z",
+  "generatedAt": "2026-02-03T20:49:25.319Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 1,
-    "implemented": 1,
+    "total": 3,
+    "implemented": 2,
     "items": [
       {
-        "id": "REQ-1",
-        "summary": "Update the Today page so that after a user creates/saves a promise, the UI shows the reflection controls (thumbs up and thumbs down) instead of an “Edit Promise” button, and the promise text is not editable after creation.",
+        "id": "REQ-33",
+        "summary": "Replace the current placeholder/generated SVG markup inside `frontend/src/components/icons/ThumbsUpIcon.tsx` with the exact SVG markup from the user-uploaded file `thumb-up.svg`, preserving the component’s `className` support and ensuring the rendered icon matches the uploaded design.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/Today.tsx"
+          "frontend/src/components/icons/ThumbsUpIcon.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/Today.tsx"
+          "frontend/src/components/icons/ThumbsUpIcon.tsx"
         ]
+      },
+      {
+        "id": "REQ-34",
+        "summary": "Replace the current placeholder/generated SVG markup inside `frontend/src/components/icons/ThumbsDownIcon.tsx` with the exact SVG markup from the user-uploaded file `thumb-down.svg`, preserving the component’s `className` support and ensuring the rendered icon matches the uploaded design.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/icons/ThumbsDownIcon.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/icons/ThumbsDownIcon.tsx"
+        ]
+      },
+      {
+        "id": "REQ-35",
+        "summary": "Ensure the app uses these updated inline SVG components everywhere thumbs appear on the Today screen and History/Journal UI (no fallback to any older/generated thumb SVGs or image paths).",
+        "status": "missing",
+        "plannedFiles": [
+          "frontend/src/pages/Today.tsx",
+          "frontend/src/components/JournalSlideOutPanel.tsx",
+          "frontend/src/components/icons/index.ts"
+        ],
+        "matchedFiles": []
       }
     ]
   },
   "changedFiles": [
     "build-request.json",
+    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/pages/Today.tsx",
+    "frontend/src/components/icons/ThumbsDownIcon.tsx",
+    "frontend/src/components/icons/ThumbsUpIcon.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

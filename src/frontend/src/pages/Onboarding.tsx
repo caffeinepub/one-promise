@@ -5,16 +5,19 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const carouselSlides = [
   {
-    image: '/assets/generated/zen-stones.dim_1200x800.png',
-    text: 'Small promises, big changes.',
+    image: '/assets/zen-stones.png',
+    headline: 'Small promises, big changes.',
+    subheadline: 'Building self-trust starts with intentions you can keep.',
   },
   {
-    image: '/assets/generated/full-sun.dim_1200x800.png',
-    text: 'One promise a day.',
+    image: '/assets/sun.png',
+    headline: 'One promise a day.',
+    subheadline: 'No more, no less. Just one commitment to yourself.',
   },
   {
-    image: '/assets/generated/crescent-moon.dim_1200x800.png',
-    text: 'A moment for you.',
+    image: '/assets/moon.png',
+    headline: 'A moment for you.',
+    subheadline: 'Reflect. Acknowledge. Rest.',
   },
 ];
 
@@ -90,12 +93,17 @@ export default function Onboarding() {
               <img
                 src={carouselSlides[currentSlide].image}
                 alt=""
-                className="w-full h-full object-contain opacity-60"
+                className="w-4/5 h-4/5 object-contain opacity-60"
               />
             </div>
-            <p className="text-2xl md:text-3xl text-[#2C2C2C]/80 font-light">
-              {carouselSlides[currentSlide].text}
-            </p>
+            <div className="space-y-3">
+              <p className="text-2xl md:text-3xl text-[#2C2C2C]/80 font-light">
+                {carouselSlides[currentSlide].headline}
+              </p>
+              <p className="text-lg md:text-xl text-[#2C2C2C]/60 font-light">
+                {carouselSlides[currentSlide].subheadline}
+              </p>
+            </div>
           </div>
 
           {/* Navigation */}

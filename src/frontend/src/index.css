@@ -67,8 +67,22 @@
         animation: slideInFromBottom 0.5s ease-out;
     }
 
+    .slide-in-from-bottom-2 {
+        animation: slideInFromBottomSmall 0.5s ease-out;
+    }
+
     .delay-200 {
         animation-delay: 200ms;
+    }
+
+    /* Reflection thumb animations */
+    .thumb-selected {
+        animation: thumbSelect 0.4s ease-out;
+    }
+
+    .thumb-deselected {
+        animation: thumbDeselect 0.3s ease-out;
+        opacity: 0.2;
     }
 
     @keyframes fadeIn {
@@ -99,6 +113,41 @@
         to {
             opacity: 1;
             transform: translateY(0);
+        }
+    }
+
+    @keyframes slideInFromBottomSmall {
+        from {
+            opacity: 0;
+            transform: translateY(0.5rem);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes thumbSelect {
+        0% {
+            transform: scale(1);
+            opacity: 0.6;
+        }
+        50% {
+            transform: scale(1.2);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(1.05);
+            opacity: 1;
+        }
+    }
+
+    @keyframes thumbDeselect {
+        from {
+            opacity: 0.6;
+        }
+        to {
+            opacity: 0.2;
         }
     }
 }

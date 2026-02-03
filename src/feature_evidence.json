@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-today-page-so-that-after-a-user-creates-saves-a-promise-the-ui-shows-the-reflection-controls-thumbs-up-and-thumbs-down-instead-of-an-edit-promise-button-and-the-promise-text-is-not-editable-after-creation",
-      "featureTitle": "Update the Today page so that after a user creates/saves a promise, the UI shows the reflection controls (thumbs up and thumbs down) instead of an “Edit Promise” button, and the promise text is not editable after creation.",
+      "featureId": "feature-replace-the-current-placeholder-generated-svg-markup-inside-frontend-src-components-icons-thumbsupicon-tsx-with-the-exact-svg-markup-from-the-user-uploaded-file-thumb-up-svg-preserving-the-component-s-classname-support-and-ensuring-the-rendered-icon-matches-the-uploaded-design",
+      "featureTitle": "Replace the current placeholder/generated SVG markup inside `frontend/src/components/icons/ThumbsUpIcon.tsx` with the exact SVG markup from the user-uploaded file `thumb-up.svg`, preserving the component’s `className` support and ensuring the rendered icon matches the uploaded design.",
       "files": [
-        "frontend/src/pages/Today.tsx"
+        "frontend/src/components/icons/ThumbsUpIcon.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -16,7 +16,26 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-1"
+        "REQ-33"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-replace-the-current-placeholder-generated-svg-markup-inside-frontend-src-components-icons-thumbsdownicon-tsx-with-the-exact-svg-markup-from-the-user-uploaded-file-thumb-down-svg-preserving-the-component-s-classname-support-and-ensuring-the-rendered-icon-matches-the-uploaded-design",
+      "featureTitle": "Replace the current placeholder/generated SVG markup inside `frontend/src/components/icons/ThumbsDownIcon.tsx` with the exact SVG markup from the user-uploaded file `thumb-down.svg`, preserving the component’s `className` support and ensuring the rendered icon matches the uploaded design.",
+      "files": [
+        "frontend/src/components/icons/ThumbsDownIcon.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-34"
       ],
       "confidence": "high"
     }

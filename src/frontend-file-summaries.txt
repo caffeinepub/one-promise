@@ -1,10 +1,20 @@
 {
   "frontend/src/App.tsx": "Main app component that handles authentication state and routes between Onboarding (unauthenticated) and Today (authenticated) screens with loading state during session initialization.",
-  "frontend/src/pages/Onboarding.tsx": "Onboarding screen with splash view and optional 3-slide carousel; \"Get Started\" triggers Internet Identity login and navigates to Today on success while \"Learn More\" shows the carousel without requiring authentication.",
-  "frontend/src/pages/Today.tsx": "Authenticated Today screen with promise creation flow including textarea input, rotating suggestions, submit handling with loading/error states, and a saved promise display view with thumbs up/down reflection controls (no editing capability).",
-  "frontend/src/index.css": "Global styles with light-only theme using cream background, monochrome color tokens, Playfair Display serif and Inter sans-serif fonts, and custom fade/slide animations.",
-  "frontend/index.html": "HTML entry point with favicon reference to the generated hand-drawn circle asset.",
+  "frontend/src/pages/Onboarding.tsx": "Onboarding screen with splash view and 3-slide carousel; carousel slides now reference user-supplied assets and display images at 80% size (20% smaller); slide 2 subheadline updated to \"No more, no less. Just one commitment to yourself.\"",
+  "frontend/src/pages/Today.tsx": "Authenticated Today screen using inline SVG thumb components (ThumbsUpIcon, ThumbsDownIcon) for all thumb icon references (reflection buttons, confirmation state, and rest mode display) with single-color CSS control.",
+  "frontend/src/index.css": "Global styles with light-only theme, monochrome palette, custom fonts, and extended animations including new slide-in-from-bottom-2 for centered thumb icon transitions.",
+  "frontend/index.html": "HTML entry point with favicon reference updated to `/favicon.png` (user-supplied asset).",
   "frontend/tailwind.config.js": "Tailwind configuration with light-only theme (dark mode removed), monochrome color palette, custom font families (Playfair Display serif, Inter sans), and extended utilities.",
   "frontend/src/hooks/useRotatingPromiseSuggestions.ts": "Custom hook that cycles through the 12 promise suggestions with fade-out then fade-in transitions, looping continuously through the list.",
-  "frontend/src/utils/todayPromiseStorage.ts": "Browser localStorage utility for persisting and retrieving today's promise with date-based expiration and error handling for storage failures."
+  "frontend/src/utils/todayPromiseStorage.ts": "Browser localStorage utility for persisting and retrieving today's promise with date-based expiration and error handling for storage failures.",
+  "frontend/src/utils/todayReflectionStorage.ts": "Browser localStorage utility for persisting and retrieving today's reflection outcome with date-based expiration using a 06:00 reset boundary (not midnight) and error handling for storage failures.",
+  "frontend/src/components/JournalSlideOutPanel.tsx": "Right-side slide-out panel displaying History & Weekly Reflection with inline SVG thumb components for outcome rendering in the history list, preserving normalization and weekly summary behavior.",
+  "frontend/src/utils/journalHistoryStorage.ts": "Frontend-only localStorage utilities for journal history with 06:00 reset-aware day keys, outcome normalization guards, and idempotent repair routine for affected entries.",
+  "frontend/src/utils/weekUtils.ts": "Date utilities with both standard getDayKey and 06:00 reset-aware getDayKeyWithReset functions for computing Mon-Sun week boundaries and stable per-day keys.",
+  "frontend/public/.ic-assets.json5": "Asset canister caching configuration with explicit no-cache rules for thumbs-up.dim_128x128.png and thumbs-down.dim_128x128.png to prevent stale caching, while maintaining 24h cache for all other assets.",
+  "frontend/src/utils/outcomeMapping.ts": "Single source of truth for reflection outcome mapping with canonical thumb-to-outcome conversion, validation, normalization, and accessibility label helpers (getOutcomeIconPath removed).",
+  "frontend/src/main.tsx": "Application entry point with React Query and Internet Identity providers; includes service worker unregistration logic to prevent stale cache issues during deployment.",
+  "frontend/src/components/icons/ThumbsUpIcon.tsx": "React component that dynamically fetches and renders the user-uploaded thumb-up.svg file with className support and currentColor styling, falling back to a placeholder if the file cannot be loaded.",
+  "frontend/src/components/icons/ThumbsDownIcon.tsx": "React component that dynamically fetches and renders the user-uploaded thumb-down.svg file with className support and currentColor styling, falling back to a placeholder if the file cannot be loaded.",
+  "frontend/src/components/icons/index.ts": "Barrel export for thumb icon components to simplify imports across Today and History."
 }

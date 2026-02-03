@@ -1,47 +1,87 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-03T10:45:21.342Z",
-  "summary": "Today.tsx was modified to add a saved-promise state and a reflection handler, and the repository summary claims the saved view now shows thumbs up/down with no editing. However, the provided diff is truncated before the saved-promise UI, so key REQ-1 acceptance criteria (no Edit button, no editable input after save, and use of the specified thumbs assets) cannot be verified from the visible evidence.",
+  "generatedAt": "2026-02-03T20:49:25.185Z",
+  "summary": "REQ-33 and REQ-34 were not implemented as requested: instead of embedding the exact uploaded SVG markup inline in the React components, the diff changes both icon components to fetch external SVG files at runtime and inject them via dangerouslySetInnerHTML, including a placeholder fallback. REQ-35 cannot be verified from the provided diff content (no Today/History UI code changes shown), though the file summary text claims usage changes. Several unrequested changes are described in the file summary text (onboarding slides, theme/tailwind, caching rules, favicon, etc.).",
   "missing_requirements": [
     {
-      "id": "REQ-1",
-      "requirement": "After tapping “Make Promise” and seeing the saved promise, there is no “Edit Promise” button and no way to return to an editable text input for that same day’s promise.",
-      "reason": "The diff is truncated before the saved-promise render branch; the visible portion only shows the creation textarea branch and state setup. No evidence is shown of removing an “Edit Promise” button or preventing returning to an editable input after save.",
+      "id": "REQ-33",
+      "requirement": "Replace the current placeholder/generated SVG markup inside `frontend/src/components/icons/ThumbsUpIcon.tsx` with the exact SVG markup from `thumb-up.svg`, preserving `className` support and rendering the uploaded design as inline SVG.",
+      "reason": "The component now fetches `/assets/thumb-up.svg` at runtime and injects it as HTML, rather than embedding the exact SVG markup inline in the TSX component. This also introduces a runtime-loaded asset path, which conflicts with the goal of embedding uploaded SVGs into inline components.",
       "evidence": [
-        "frontend/src/pages/Today.tsx (truncated)"
+        "frontend/src/components/icons/ThumbsUpIcon.tsx"
       ]
     },
     {
-      "id": "REQ-1",
-      "requirement": "The saved promise view displays two reflection actions: thumbs up and thumbs down (not a generic edit action).",
-      "reason": "A handleReflection(type: 'up' | 'down') function is present, but the truncated diff does not show any rendered thumbs up/down controls in the saved promise view.",
+      "id": "REQ-34",
+      "requirement": "Replace the current placeholder/generated SVG markup inside `frontend/src/components/icons/ThumbsDownIcon.tsx` with the exact SVG markup from `thumb-down.svg`, preserving `className` support and rendering the uploaded design as inline SVG.",
+      "reason": "The component now fetches `/assets/thumb-down.svg` at runtime and injects it as HTML, rather than embedding the exact SVG markup inline in the TSX component. This also introduces a runtime-loaded asset path, which conflicts with the goal of embedding uploaded SVGs into inline components.",
       "evidence": [
-        "frontend/src/pages/Today.tsx (truncated)"
+        "frontend/src/components/icons/ThumbsDownIcon.tsx"
       ]
     },
     {
-      "id": "REQ-1",
-      "requirement": "The thumbs controls use the existing generated assets: frontend/public/assets/generated/thumbs-up.dim_128x128.png and frontend/public/assets/generated/thumbs-down.dim_128x128.png (or equivalent icon rendering already used elsewhere in the app).",
-      "reason": "No import/reference to the specified thumbs image assets (or any equivalent icon rendering) is visible in the truncated Today.tsx diff, and no other file diffs show asset usage.",
+      "id": "REQ-35",
+      "requirement": "Ensure the app uses the updated inline SVG components everywhere thumbs appear on the Today screen and History/Journal UI (no fallback to older/generated thumb SVGs or image paths).",
+      "reason": "The provided diff content only shows changes to the icon component files and summary/state files; it does not include the Today screen or History/Journal UI code changes needed to verify usage everywhere. Additionally, the updated icon components themselves now rely on external `/assets/*.svg` paths and include fallback placeholder SVG markup, which contradicts the 'no fallback to older/generated thumb SVGs or image paths' intent.",
       "evidence": [
-        "frontend/src/pages/Today.tsx (truncated)"
+        "frontend/src/components/icons/ThumbsUpIcon.tsx",
+        "frontend/src/components/icons/ThumbsDownIcon.tsx",
+        "frontend-file-summaries.txt"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Reflection action currently logs to console as a placeholder for future reflection functionality.",
-      "reason": "The BuildRequest only asked to restore/show thumbs up/down reflection controls; it did not request adding placeholder behavior or logging for future reflection functionality.",
+      "description": "Runtime fetching of thumb SVG assets (`/assets/thumb-up.svg` and `/assets/thumb-down.svg`) with DOMParser manipulation and HTML injection via `dangerouslySetInnerHTML`.",
+      "reason": "The BuildRequest asks to embed the exact uploaded SVG markup inline in the React components, not to load SVGs at runtime and inject them as HTML.",
       "evidence": [
-        "frontend/src/pages/Today.tsx (truncated) — handleReflection(): \"// Placeholder for future reflection functionality\" and console.log"
+        "frontend/src/components/icons/ThumbsUpIcon.tsx",
+        "frontend/src/components/icons/ThumbsDownIcon.tsx"
+      ]
+    },
+    {
+      "description": "Fallback to a placeholder inline SVG path if the SVG fetch fails.",
+      "reason": "The BuildRequest requires rendering the exact uploaded SVG designs, and explicitly calls out avoiding fallback to older/generated thumb SVGs.",
+      "evidence": [
+        "frontend/src/components/icons/ThumbsUpIcon.tsx",
+        "frontend/src/components/icons/ThumbsDownIcon.tsx"
+      ]
+    },
+    {
+      "description": "Onboarding slide image/path changes and slide text updates.",
+      "reason": "Non-goal explicitly says not to change onboarding slide images or their asset paths.",
+      "evidence": [
+        "frontend-file-summaries.txt"
+      ]
+    },
+    {
+      "description": "Asset caching configuration changes referencing thumb PNG assets and no-cache rules.",
+      "reason": "Non-goal explicitly says not to introduce new PNG thumb assets; caching rules for PNG thumbs are unrelated to embedding uploaded SVGs into inline components.",
+      "evidence": [
+        "frontend-file-summaries.txt"
+      ]
+    },
+    {
+      "description": "Global theme/tailwind configuration changes (light-only theme, palette, fonts, animations) and favicon change.",
+      "reason": "These are not requested by REQ-33/34/35 and fall outside the scope of embedding SVG thumbs into inline React components.",
+      "evidence": [
+        "frontend-file-summaries.txt"
+      ]
+    },
+    {
+      "description": "Changes described to `frontend/src/main.tsx` (service worker unregistration logic).",
+      "reason": "Constraint explicitly says not to edit `frontend/src/main.tsx`.",
+      "evidence": [
+        "frontend-file-summaries.txt"
       ]
     }
   ],
-  "confidence": 0.56,
+  "confidence": 0.74,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/src/pages/Today.tsx",
+    "frontend/src/components/icons/ThumbsDownIcon.tsx",
+    "frontend/src/components/icons/ThumbsUpIcon.tsx",
     "project_state.json"
   ]
 }

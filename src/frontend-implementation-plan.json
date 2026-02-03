@@ -1,21 +1,60 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Today screen: remove promise editing and restore reflection thumbs controls",
+  "title": "Inline React thumbs icons updated to match uploaded SVGs",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "After a promise is saved on Today, show non-editable saved promise text with thumbs up/down reflection controls instead of an Edit Promise action.",
+      "id": "REQ-33",
+      "summary": "Update ThumbsUpIcon to render the exact uploaded thumb-up.svg markup while preserving className styling support.",
       "acceptanceCriteria": [
-        "After tapping “Make Promise” and seeing the saved promise, there is no “Edit Promise” button and no way to return to an editable text input for that same day’s promise.",
-        "The saved promise view displays two reflection actions: thumbs up and thumbs down (not a generic edit action).",
-        "The thumbs controls use the existing generated assets: frontend/public/assets/generated/thumbs-up.dim_128x128.png and frontend/public/assets/generated/thumbs-down.dim_128x128.png (or equivalent icon rendering already used elsewhere in the app)."
+        "`ThumbsUpIcon` renders the same shape/design as `thumb-up.svg` (not the current placeholder strokes).",
+        "`ThumbsUpIcon` still accepts `className` and applies it to the root `<svg>` element (or equivalent wrapper) so sizing/color can be controlled by existing Tailwind classes."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/icons/ThumbsUpIcon.tsx",
+          "operation": "modify",
+          "description": "Replace the placeholder inline SVG paths with the exact SVG markup from the user-uploaded `thumb-up.svg`, ensuring the root <svg> preserves `className={className}` and uses currentColor-compatible styling as needed."
+        }
+      ]
+    },
+    {
+      "id": "REQ-34",
+      "summary": "Update ThumbsDownIcon to render the exact uploaded thumb-down.svg markup while preserving className styling support.",
+      "acceptanceCriteria": [
+        "`ThumbsDownIcon` renders the same shape/design as `thumb-down.svg` (not the current placeholder strokes).",
+        "`ThumbsDownIcon` still accepts `className` and applies it to the root `<svg>` element (or equivalent wrapper) so sizing/color can be controlled by existing Tailwind classes."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/icons/ThumbsDownIcon.tsx",
+          "operation": "modify",
+          "description": "Replace the placeholder inline SVG paths with the exact SVG markup from the user-uploaded `thumb-down.svg`, ensuring the root <svg> preserves `className={className}` and uses currentColor-compatible styling as needed."
+        }
+      ]
+    },
+    {
+      "id": "REQ-35",
+      "summary": "Ensure Today and History/Journal UI consistently render thumbs using the updated inline SVG icon components (no older SVGs or image asset fallbacks).",
+      "acceptanceCriteria": [
+        "Today screen thumb UI renders using `ThumbsUpIcon`/`ThumbsDownIcon` and visually matches the uploaded SVG designs.",
+        "History/Journal thumb outcome icons render using `ThumbsUpIcon`/`ThumbsDownIcon` and visually match the uploaded SVG designs."
       ],
       "file_operations": [
         {
           "path": "frontend/src/pages/Today.tsx",
           "operation": "modify",
-          "description": "Remove the Edit Promise flow/state (including the Edit Promise button and handler) so saved promises cannot be returned to an editable Textarea for the same day. Update the saved promise view to render two reflection action controls (thumbs up / thumbs down) using the existing generated assets at frontend/public/assets/generated/thumbs-up.dim_128x128.png and frontend/public/assets/generated/thumbs-down.dim_128x128.png, while keeping the promise text read-only."
+          "description": "Verify the Today screen thumb UI uses only `ThumbsUpIcon`/`ThumbsDownIcon` for all thumb renders and remove/avoid any fallback to older/generated thumb SVG markup or image paths."
+        },
+        {
+          "path": "frontend/src/components/JournalSlideOutPanel.tsx",
+          "operation": "modify",
+          "description": "Verify the History/Journal UI uses only `ThumbsUpIcon`/`ThumbsDownIcon` for all outcome icons and remove/avoid any fallback to older/generated thumb SVG markup or image paths."
+        },
+        {
+          "path": "frontend/src/components/icons/index.ts",
+          "operation": "modify",
+          "description": "Confirm the icons barrel exports continue to point to the updated `ThumbsUpIcon` and `ThumbsDownIcon` components so all imports resolve to the updated inline SVG implementations."
         }
       ]
     }
