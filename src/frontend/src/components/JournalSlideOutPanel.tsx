@@ -118,7 +118,7 @@ export default function JournalSlideOutPanel({ isOpen, onClose, onLogout, onRese
                   variant="outline"
                   className="w-full border-[#2C2C2C]/20 text-[#2C2C2C]/70 hover:bg-[#2C2C2C]/5 hover:text-[#2C2C2C]"
                 >
-                  Reset Today (Testing)
+                  Reset for testing
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent className="bg-[#F2F5F7]">

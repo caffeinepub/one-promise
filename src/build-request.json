@@ -1,68 +1,35 @@
 {
   "kind": "build_request",
-  "title": "Embed user-uploaded thumb-up.svg and thumb-down.svg into inline React icon components",
+  "title": "Retry build and deploy with no code changes",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-33",
-      "text": "Replace the current placeholder/generated SVG markup inside `frontend/src/components/icons/ThumbsUpIcon.tsx` with the exact SVG markup from the user-uploaded file `thumb-up.svg`, preserving the component’s `className` support and ensuring the rendered icon matches the uploaded design.",
-      "target": "frontend",
+      "id": "REQ-28",
+      "text": "Retry the exact same build and deploy process with no code changes (same source state/commit) and attempt to deploy to the network again.",
+      "target": "unknown",
       "source": {
         "messageIds": [
-          "msg-20"
+          "msg-5"
         ],
         "quotes": [
-          "thumb-up.svg and thumb-down.svg"
+          "yes"
         ]
       },
       "acceptanceCriteria": [
-        "`ThumbsUpIcon` renders the same shape/design as `thumb-up.svg` (not the current placeholder strokes).",
-        "`ThumbsUpIcon` still accepts `className` and applies it to the root `<svg>` element (or equivalent wrapper) so sizing/color can be controlled by existing Tailwind classes."
-      ]
-    },
-    {
-      "id": "REQ-34",
-      "text": "Replace the current placeholder/generated SVG markup inside `frontend/src/components/icons/ThumbsDownIcon.tsx` with the exact SVG markup from the user-uploaded file `thumb-down.svg`, preserving the component’s `className` support and ensuring the rendered icon matches the uploaded design.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-20"
-        ],
-        "quotes": [
-          "thumb-up.svg and thumb-down.svg"
-        ]
-      },
-      "acceptanceCriteria": [
-        "`ThumbsDownIcon` renders the same shape/design as `thumb-down.svg` (not the current placeholder strokes).",
-        "`ThumbsDownIcon` still accepts `className` and applies it to the root `<svg>` element (or equivalent wrapper) so sizing/color can be controlled by existing Tailwind classes."
-      ]
-    },
-    {
-      "id": "REQ-35",
-      "text": "Ensure the app uses these updated inline SVG components everywhere thumbs appear on the Today screen and History/Journal UI (no fallback to any older/generated thumb SVGs or image paths).",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-20"
-        ],
-        "quotes": [
-          "thumb-up.svg and thumb-down.svg"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Today screen thumb UI renders using `ThumbsUpIcon`/`ThumbsDownIcon` and visually matches the uploaded SVG designs.",
-        "History/Journal thumb outcome icons render using `ThumbsUpIcon`/`ThumbsDownIcon` and visually match the uploaded SVG designs."
+        "A new build is executed without modifying any frontend or backend source files",
+        "Deployment completes successfully without the prior deployment error",
+        "The deployed app is reachable and loads its existing functionality as-is"
       ]
     }
   ],
   "constraints": [
-    "Do not edit any files under `frontend/src/components/ui` (compose existing shadcn components instead).",
-    "Do not edit files in `frontend/src/hooks/useInternetIdentity.ts`, `frontend/src/hooks/useInternetIdentity.tsx`, `frontend/src/hooks/useActor.ts`, or `frontend/src/main.tsx`."
+    "Do not make any code changes (frontend or backend).",
+    "Do not change assets, caching rules, or service worker behavior as part of this request."
   ],
   "nonGoals": [
-    "Do not change onboarding slide images or their asset paths.",
-    "Do not introduce new PNG thumb assets or switch thumbs back to runtime-loaded `<img>` assets.",
-    "Do not change backend (Motoko) behavior."
+    "Fixing the underlying cause of the deployment error (unless it is resolved by a clean retry with no code changes).",
+    "Any UI/UX changes or design adjustments.",
+    "Any backend schema/state migrations."
   ],
   "imageRequirements": {
     "required": [],

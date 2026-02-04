@@ -1,60 +1,26 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Inline React thumbs icons updated to match uploaded SVGs",
+  "title": "Retry build and deploy with no code changes",
   "requirements": [
     {
-      "id": "REQ-33",
-      "summary": "Update ThumbsUpIcon to render the exact uploaded thumb-up.svg markup while preserving className styling support.",
+      "id": "REQ-28",
+      "summary": "Re-run the existing build and deployment workflow exactly as-is (same source state) without modifying any frontend code, assets, or caching behavior.",
       "acceptanceCriteria": [
-        "`ThumbsUpIcon` renders the same shape/design as `thumb-up.svg` (not the current placeholder strokes).",
-        "`ThumbsUpIcon` still accepts `className` and applies it to the root `<svg>` element (or equivalent wrapper) so sizing/color can be controlled by existing Tailwind classes."
+        "A new build is executed without modifying any frontend or backend source files",
+        "Deployment completes successfully without the prior deployment error",
+        "The deployed app is reachable and loads its existing functionality as-is"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/icons/ThumbsUpIcon.tsx",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Replace the placeholder inline SVG paths with the exact SVG markup from the user-uploaded `thumb-up.svg`, ensuring the root <svg> preserves `className={className}` and uses currentColor-compatible styling as needed."
-        }
-      ]
-    },
-    {
-      "id": "REQ-34",
-      "summary": "Update ThumbsDownIcon to render the exact uploaded thumb-down.svg markup while preserving className styling support.",
-      "acceptanceCriteria": [
-        "`ThumbsDownIcon` renders the same shape/design as `thumb-down.svg` (not the current placeholder strokes).",
-        "`ThumbsDownIcon` still accepts `className` and applies it to the root `<svg>` element (or equivalent wrapper) so sizing/color can be controlled by existing Tailwind classes."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/icons/ThumbsDownIcon.tsx",
-          "operation": "modify",
-          "description": "Replace the placeholder inline SVG paths with the exact SVG markup from the user-uploaded `thumb-down.svg`, ensuring the root <svg> preserves `className={className}` and uses currentColor-compatible styling as needed."
-        }
-      ]
-    },
-    {
-      "id": "REQ-35",
-      "summary": "Ensure Today and History/Journal UI consistently render thumbs using the updated inline SVG icon components (no older SVGs or image asset fallbacks).",
-      "acceptanceCriteria": [
-        "Today screen thumb UI renders using `ThumbsUpIcon`/`ThumbsDownIcon` and visually matches the uploaded SVG designs.",
-        "History/Journal thumb outcome icons render using `ThumbsUpIcon`/`ThumbsDownIcon` and visually match the uploaded SVG designs."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/Today.tsx",
-          "operation": "modify",
-          "description": "Verify the Today screen thumb UI uses only `ThumbsUpIcon`/`ThumbsDownIcon` for all thumb renders and remove/avoid any fallback to older/generated thumb SVG markup or image paths."
+          "description": "No-op verification only: open and confirm the authentication/routing logic remains unchanged; do not edit and do not commit any changes. This is to ensure the retry deploy uses the exact same source state."
         },
         {
-          "path": "frontend/src/components/JournalSlideOutPanel.tsx",
+          "path": "frontend/public/.ic-assets.json5",
           "operation": "modify",
-          "description": "Verify the History/Journal UI uses only `ThumbsUpIcon`/`ThumbsDownIcon` for all outcome icons and remove/avoid any fallback to older/generated thumb SVG markup or image paths."
-        },
-        {
-          "path": "frontend/src/components/icons/index.ts",
-          "operation": "modify",
-          "description": "Confirm the icons barrel exports continue to point to the updated `ThumbsUpIcon` and `ThumbsDownIcon` components so all imports resolve to the updated inline SVG implementations."
+          "description": "No-op verification only: confirm asset canister cache-control rules are unchanged; do not modify caching rules and do not commit any changes. This ensures the retry deploy does not change asset behavior."
         }
       ]
     }

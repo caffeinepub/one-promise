@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 187,
-  "summary": "One Promise is a minimal, calming self-reflection PWA where users set one daily promise, reflect with a simple thumbs up/down, enter rest mode until 06:00, and review weekly/history; light cream/off-white monochrome styling with hand-sketched assets and subtle fade/slide animations. Project is under a hard deadline: Caffeine Promptathon finishes tomorrow, so remaining fixes (notably thumb icons/static assets + build stability) must be completed before then.",
+  "projectStateVersion": 262,
+  "summary": "One Promise is a minimal, calming self-reflection PWA where users set one daily promise, reflect with a simple thumbs up/down, enter rest mode until 06:00, and review weekly/history; light cream/off-white monochrome styling with hand-sketched assets and subtle fade/slide animations. Project is under a hard deadline: Caffeine Promptathon submission is today, so remaining fixes (notably mobile notification permission prompt reliability) must be completed without introducing any UI/design regressions.",
   "existing_features": [
     {
       "id": "IF-1",
@@ -144,36 +144,133 @@
       "version": 1
     },
     {
-      "id": "IF-13",
-      "title": "Thumb icons rendered via inline SVG React components (Today + History)",
+      "id": "IF-16",
+      "title": "Thumb icons rebuilt from user-pasted SVG markup (fixed #2C2C2C) and used across Today + History",
       "synonyms": [
-        "inline SVG thumbs",
-        "bundle-embedded thumb icons",
-        "no runtime thumb asset URLs"
+        "thumb-up inline SVG fix",
+        "thumb-down inline SVG fix",
+        "embed pasted SVG",
+        "fixed fill color"
       ],
-      "description": "Replaced PNG/thumb image loading with bundle-embedded inline SVG React components for thumbs-up and thumbs-down. Today and History/Journal now render thumbs via these components (CSS-controllable via currentColor), removing dependency on public asset paths/service-worker caching for thumb icons.",
+      "description": "Updated both inline SVG React components (ThumbsUpIcon + ThumbsDownIcon) to embed the exact user-pasted SVG markup and render with a fixed fill color #2C2C2C (not currentColor). Today and History/Journal render thumbs via these components (not <img>), ensuring the intended thumb designs display reliably and bypassing static-asset/service-worker caching issues.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-17",
+      "title": "Create Promise screen layout tweak (textbox up, button down, larger typed text)",
+      "synonyms": [
+        "promise creation layout adjustment",
+        "textarea spacing tweak"
+      ],
+      "description": "Adjusted Create Promise screen layout: moved promise textbox up ~25px, moved the “Make Promise” button down ~15px to increase spacing, and set typed text font-size to 1.5rem (placeholder unchanged).",
       "reqIds": [
-        "REQ-28",
-        "REQ-29",
-        "REQ-30",
-        "REQ-31",
-        "REQ-32"
+        "AR-42"
       ],
       "version": 1
     },
     {
-      "id": "feature-replace-the-current-placeholder-generated-svg-markup-inside-frontend-src-components-icons-thumbsupicon-tsx-with-the-exact-svg-markup-from-the-user-uploaded-file-thumb-up-svg-preserving-the-component-s-classname-support-and-ensuring-the-rendered-icon-matches-the-uploaded-design",
-      "title": "Replace the current placeholder/generated SVG markup inside `frontend/src/components/icons/ThumbsUpIcon.tsx` with the exact SVG markup from the user-uploaded file `thumb-up.svg`, preserving the component’s `className` support and ensuring the rendered icon matches the uploaded design.",
+      "id": "IF-18",
+      "title": "Onboarding carousel auto-advance (Slide 1 landing; 5s to Slide 2; 5s to Slide 3; horizontal slide transition)",
+      "synonyms": [
+        "onboarding timed slideshow",
+        "useOnboardingAutoAdvance"
+      ],
+      "description": "Onboarding carousel now starts on Slide 1 as the landing screen and auto-advances to Slide 2 after 5 seconds and Slide 3 after another 5 seconds, using a horizontal slide transition; flow stops on Slide 3 while still allowing manual navigation.",
       "reqIds": [
-        "REQ-33"
+        "AR-43"
       ],
       "version": 1
     },
     {
-      "id": "feature-replace-the-current-placeholder-generated-svg-markup-inside-frontend-src-components-icons-thumbsdownicon-tsx-with-the-exact-svg-markup-from-the-user-uploaded-file-thumb-down-svg-preserving-the-component-s-classname-support-and-ensuring-the-rendered-icon-matches-the-uploaded-design",
-      "title": "Replace the current placeholder/generated SVG markup inside `frontend/src/components/icons/ThumbsDownIcon.tsx` with the exact SVG markup from the user-uploaded file `thumb-down.svg`, preserving the component’s `className` support and ensuring the rendered icon matches the uploaded design.",
+      "id": "IF-19",
+      "title": "Logout returns user to landing screen (not onboarding/learn-more carousel)",
+      "synonyms": [
+        "logout navigation fix"
+      ],
+      "description": "Logging out now navigates the user back to the current landing screen rather than entering the onboarding/learn-more carousel.",
       "reqIds": [
-        "REQ-34"
+        "AR-44"
+      ],
+      "version": 1
+    },
+    {
+      "id": "IF-20",
+      "title": "Initial app entry routes directly to Onboarding Slide 1 (no landing flash); logout routes to landing only",
+      "synonyms": [
+        "initial navigation fix",
+        "onboarding as index route",
+        "logout to landing"
+      ],
+      "description": "Updated routing/entry logic so first launch (and direct URL entry) lands on the Onboarding carousel Slide 1 without briefly showing the original landing screen; the original landing screen is used only after logout.",
+      "reqIds": [
+        "AR-46"
+      ],
+      "version": 1
+    },
+    {
+      "id": "IF-21",
+      "title": "Onboarding auto-advance reliably progresses Slide 1 -> 2 -> 3 (5s intervals) and stops on Slide 3",
+      "synonyms": [
+        "onboarding timed slideshow fix",
+        "auto-advance slide 3"
+      ],
+      "description": "Fixed the onboarding/Learn More carousel timed progression so it does not stop on Slide 2; it advances to Slide 3 after the second 5-second interval (timed from Slide 2 activation) using horizontal slide transitions, while still allowing manual navigation.",
+      "reqIds": [
+        "AR-45"
+      ],
+      "version": 1
+    },
+    {
+      "id": "IF-22",
+      "title": "Today header uses burger/menu icon to open slide-out history panel (no header logout icon)",
+      "synonyms": [
+        "header icons cleanup",
+        "burger/menu icon",
+        "remove logout icon"
+      ],
+      "description": "Updated the Today screen header to show a simple burger/menu icon that opens the slide-out History/Journal panel, and removed the separate logout icon from the header (logout remains inside the panel).",
+      "reqIds": [
+        "AR-47"
+      ],
+      "version": 1
+    },
+    {
+      "id": "IF-23",
+      "title": "Reset for testing action restored in slide-out history panel",
+      "synonyms": [
+        "testing shortcut reset",
+        "panel reset action"
+      ],
+      "description": "Restored the previously available “Reset for testing” action inside the slide-out History/Journal panel with the same behavior and placement as before the regression.",
+      "reqIds": [
+        "AR-48"
+      ],
+      "version": 1
+    },
+    {
+      "id": "IF-24",
+      "title": "PWA notification permission prompt diagnosis report (iOS/Android/desktop)",
+      "synonyms": [
+        "notification permission diagnosis",
+        "mobile PWA notifications report",
+        "AR-50"
+      ],
+      "description": "Added a code-level diagnosis document at `frontend/diagnostics/pwa-notification-permission-diagnosis.md` analyzing why the mobile PWA notification permission prompt is not firing (and app not appearing in OS notification settings), covering iOS PWA and considering applicability to Android PWAs and desktop browsers. No behavioral code changes implied—diagnosis-only artifact for review.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-25",
+      "title": "Notification permission request flow (one-time prompt + support checks) wired from Today screen",
+      "synonyms": [
+        "mobile PWA notification permission prompt fix",
+        "notificationPermissionRequested flag",
+        "AR-49"
+      ],
+      "description": "Implemented an explicit notification permission request utility that checks support + Notification.permission, requests permission only when state is \"default\", and persists a one-time localStorage flag to avoid re-prompting across sessions. Wired the permission request from the Today/promise screen so it reliably triggers the OS prompt on supported platforms; notification scheduling is decoupled and runs only after permission is granted.",
+      "reqIds": [
+        "AR-49"
       ],
       "version": 1
     }
@@ -415,15 +512,21 @@
     },
     {
       "id": "AR-40",
-      "summary": "Ensure inline SVG thumb icons use the user-uploaded SVG designs (not generated placeholders) on Today + History, and verify the correct assets are embedded in ThumbsUpIcon/ThumbsDownIcon components",
+      "summary": "Fix mobile PWA notification permission prompt not appearing when installed to home screen (works on desktop Chrome). Ensure fix does not change UI/design and avoids regressions (e.g., burger/menu icon, slide-out panel).",
       "reqIds": [],
       "status": "pending"
     },
     {
-      "id": "AR-43",
-      "summary": "Ensure the app uses these updated inline SVG components everywhere thumbs appear on the Today screen and History/Journal UI (no fallback to any older/generated thumb SVGs or image paths).",
+      "id": "AR-51",
+      "summary": "Style consistency fix: on the “Did you keep your promise?” (reflection) screen, render the promise text using the same font style as the prior promise confirmation screen; make only this single style change to avoid regressions",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-52",
+      "summary": "Retry the exact same build and deploy process with no code changes (same source state/commit) and attempt to deploy to the network again.",
       "reqIds": [
-        "REQ-35"
+        "REQ-28"
       ],
       "status": "pending"
     }
@@ -438,69 +541,7 @@
     "Promise text is locked after creation; no editing before reflection.",
     "Rest Mode must persist across app close/reopen until 06:00 next day.",
     "If user does not reflect before 06:00, leave the day unreflected (do not auto-mark missed).",
-    "Weekly summary is calendar week (Mon–Sun), not rolling 7 days.",
-    "History UI: unreflected days show a dash (—) instead of a thumb outcome icon.",
-    "Testing shortcut behavior: tapping “TODAY” shows the start of the onboarding carousel again.",
-    "“Learn More” is not accessible after initial onboarding (no re-entry point in-app).",
-    "Request notification permission when the user lands on the promise screen for the first time.",
-    "20:00 evening reminder is skipped entirely if no promise was set.",
-    "GA4 analytics are anonymous-only; track strictly the 4 events (promise_created, reflection_yes, reflection_no, history_viewed).",
-    "Lock background color to #F2F5F7 (light mode only).",
-    "Typography: Playfair Display acceptable for headers; clean sans-serif (e.g., Inter) for body text.",
-    "Frontend includes generated hand-sketched-style assets (sun/moon/zen stones, journal icon, thumbs up/down, favicon) stored under frontend/public/assets/generated.",
-    "ICP canister infrastructure is present (Motoko backend + frontend actor wiring) with Internet Identity authentication hooks available in the frontend.",
-    "Authentication flow decision: trigger Internet Identity login when the user taps “Get Started” the first time; keep the user logged in across sessions unless they explicitly log out.",
-    "UI decision: replace the top-right Journal icon with a simple burger/menu icon to open the slide-out history panel (logout moved to bottom of the panel).",
-    "Hand-sketched generated assets are served from the app public path (/assets/generated/*); UI components should reference these paths directly (avoid bundler imports) to ensure swapped/replacement images appear in-app.",
-    "Journal access from Today uses a burger/menu icon (not the journal icon) to open the slide-out history panel.",
-    "Generated/brand assets are now referenced by stable, human-readable public paths under `/assets/generated/` (e.g., `/assets/generated/sun.png`, `moon.png`, `zen-stones.png`, `thumbs-up.png`, `thumbs-down.png`, `favicon.png`) rather than the previous `*.dim_<WxH>.png` filenames, enabling straightforward asset replacement by overwriting these exact files.",
-    "Because this is a PWA, asset swaps may require a service worker update/refresh (or cache bust) to ensure clients see the new images immediately after deploy.",
-    "Centralize reflection outcome mapping (e.g., enum kept/missed) and reuse it across Today UI, History rendering, persistence, and analytics to prevent thumbs inversion regressions.",
-    "Add a one-time data correction/migration path to swap incorrectly recorded kept/missed outcomes for days impacted by the thumbs inversion bug (so History/weekly summary become accurate).",
-    "Retroactive kept/missed data correction: apply automatic swap for all previously impacted entries if implementation is straightforward; if it becomes complex/risky, prioritize fixing going-forward behavior and skip deep backfill.",
-    "Post-reflection Today UI: show the selected thumb icon centered under the promise text immediately after tap with a subtle fade/slide, and keep it visible throughout Rest Mode until the 06:00 reset.",
-    "Add a shared, centralized kept/missed outcome mapping (enum/function) used by Today, History, persistence, and analytics; include a small sanity check/fallback so invalid outcomes cannot silently persist incorrect data.",
-    "Thumb icon assets: ensure the user-supplied thumbs are used everywhere they appear (Today reflection buttons, post-reflection centered icon, History list, and any weekly summary indicators), include a cache-bust/service-worker update so changes propagate immediately, and remove old/original thumb assets (or at minimum stop referencing them).",
-    "Use centralized utilities for asset URLs and PWA asset refresh (e.g., assetUrl + pwaAssetRefresh) so icon swaps (thumbs) reliably update across clients/service worker caches.",
-    "Store and render reflection outcomes via a single shared outcomeMapping module to prevent kept/missed inversion across Today, History, persistence, and analytics.",
-    "Thumb icon assets are now provided as public static files (`/thumbs-up.png`, `/thumbs-down.png` and/or `/assets/thumbs-up.png`, `/assets/thumbs-down.png`); all UI locations that render thumbs should reference these stable public paths (not bundled imports) so swapping the files updates the app after a service worker refresh.",
-    "When resolving asset regressions (e.g., thumbs icons) and repeated build failures occur, prefer the safest approach: a clean rebuild with explicit cache/service-worker refresh to minimize further breakages.",
-    "Added a lightweight smoke test checklist/documentation (frontend/SMOKE_TEST_THUMBS_AND_STYLING.md) to verify thumb icon consistency and styling integrity after deploy/service-worker refresh.",
-    "User approved a temporary stabilization approach: simplify/temporarily disable aggressive service worker / PWA cache-busting logic if needed to get builds/deploys working reliably, restore thumbs via stable public paths/imports first, then reintroduce stricter cache control after a successful deploy is confirmed.",
-    "User explicitly approved deleting/removing the old/original thumb asset files entirely (not just stopping references) to prevent any fallback to old thumbs; proceed with rebuild after deletion.",
-    "Execution preference: handle fixes one at a time (apply a single focused change per build/deploy to reduce risk of further breakages).",
-    "Backend authorization/access-control layer updated/added (MixinAuthorization + access-control modules) as part of ICP template/core infrastructure refresh; ensure any future backend endpoints account for the new authorization wiring.",
-    "User approved switching strategy to permanently bypass PWA/service-worker caching for thumbs: eliminate static image thumbs and use inline SVG/component-embedded assets with new identifiers (applied on Today + History).",
-    "User preference: revert thumb icons to the last known working implementation (simple image replacement) rather than pursuing the more complex inline-SVG/no-static-assets strategy, since replacing an image should be straightforward.",
-    "Scope constraint: when restoring correct thumb/onboarding assets, change only image assets/asset references and avoid reverting or modifying unrelated app logic/code.",
-    "Thumb icon files now exist as stable public-root assets (`/thumbs-up.png`, `/thumbs-down.png`) in addition to generated assets; UI should prefer these stable paths to simplify swaps and reduce bundler/cache issues.",
-    "Second-version thumb assets (`thumbs-up-v2.dim_128x128.png`, `thumbs-down-v2.dim_128x128.png`) were added under `/assets/generated/` as alternative replacements if needed; ensure only one canonical path is referenced in UI to avoid inconsistencies.",
-    "User will reupload their supplied thumbs-up/down assets; ensure these exact uploaded files become the only canonical thumb icons used everywhere (Today + History) with no fallback/legacy paths left.",
-    "Approved updating the service worker precache/asset list to reference only the canonical new thumb filenames (thumbs) as part of the image-only correction.",
-    "Frontend includes shadcn/ui component scaffolding and Tailwind/Vite configuration to support standardized UI primitives (dialogs/sheets/sidebar/etc.).",
-    "User confirmed they already reuploaded the correct thumbs; do not revert other code—only fix thumb asset wiring/paths so the uploaded thumbs render correctly everywhere (Today + History).",
-    "When thumb images are broken due to path mismatches, prefer the simplest corrective action: place the uploaded thumb files at the exact public paths currently referenced by the UI (or update all references to a single canonical path) and ensure no legacy/fallback paths remain.",
-    "Current Today/History thumb <img> references use the generated public path `/assets/generated/thumbs-up.dim_128x128.png` (and corresponding thumbs-down) as seen in page source; thumb rendering depends on files existing at these exact paths/filenames.",
-    "Investigate whether service worker / PWA caching and/or precache manifest is serving stale/missing asset URLs; ensure all static image assets (thumbs + onboarding slide images) exist at the exact public paths referenced by the UI and are included/updated correctly in the service worker cache strategy.",
-    "Decision: use stable public-root asset paths for thumbs (`/thumbs-up.png`, `/thumbs-down.png`) as the single canonical source of truth, and delete/ignore generated thumb assets to avoid path/caching mismatches.",
-    "To prevent recurring broken static assets, ensure service worker precache/asset list does not reference non-existent URLs; consider excluding frequently-swapped assets (thumbs and onboarding slides) from precache or bumping cache version on asset updates.",
-    "Decision: adopt canonical public-root paths for thumbs as the single source of truth (`/thumbs-up.png`, `/thumbs-down.png`) and remove/ignore all `assets/generated/*` thumb references.",
-    "Decision: apply the same canonical public-root strategy to onboarding slide images (`/zen-stones.png`, `/sun.png`, `/moon.png`) and remove/ignore all `assets/generated/*` slide image references.",
-    "Service worker strategy: disable/exclude image precaching (thumbs + onboarding slides at minimum) so frequently-swapped static images are fetched fresh and not served from stale/missing precache entries.",
-    "Delivery constraint: Caffeine Promptathon ends tomorrow; prioritize the smallest-scope changes necessary to finish (focus on restoring working thumbs/static assets and ensuring build/deploy succeeds) and avoid non-essential refactors.",
-    "If static thumb images remain broken/unreliable due to path/caching/build issues, switch thumbs to inline SVG (React components) bundled with the app to bypass public asset paths and service-worker caching entirely.",
-    "User approved switching thumb icons (only) to inline SVG React components (bundle-embedded) to bypass static asset path/caching issues; apply on Today + History.",
-    "User will provide the SVG thumb designs to use for the new inline SVG components.",
-    "User has now uploaded the two thumb SVG files (thumbs up + thumbs down) to be used for the inline SVG React component approach on Today + History (thumbs only).",
-    "Confirmed scope for SVG approach: only replace thumb icons with inline SVG React components on Today + History; do not modify onboarding/slide images or other assets.",
-    "SVG thumb rendering requirement: single-color icons controlled via CSS (e.g., `currentColor`).",
-    "Thumb icons are now implemented as inline SVG React components (ThumbsUpIcon/ThumbsDownIcon) using the user-uploaded SVGs and rendered with `currentColor`; Today + History use components instead of `<img src=...>` to avoid static-asset path and service-worker caching issues.",
-    "Verification step for SVG-embedded assets: confirm ThumbsUpIcon/ThumbsDownIcon React components are sourced from the user-uploaded SVG files (not regenerated/placeholder SVGs) and render as single-color via CSS currentColor on Today + History.",
-    "If the deployed inline SVG thumbs are not the user’s designs, accept the user’s SVG source directly (pasted SVG markup) and rebuild ThumbsUpIcon/ThumbsDownIcon React components from that exact markup to ensure the correct designs are embedded (Today + History only).",
-    "User preference for correcting wrong SVG thumbs: uploading the correct thumb SVG files is preferred over pasting raw SVG markup; embed the uploaded SVGs into the React thumb components (Today + History).",
-    "User preference for correcting wrong SVG thumbs: uploading the correct thumb SVG files is preferred over pasting raw SVG markup; embed the uploaded SVGs into the React thumb components (Today + History).",
-    "User indicates they have uploaded the (correct) thumb assets again; next step is to wire/embed these uploaded thumb files into the ThumbsUpIcon/ThumbsDownIcon React components so Today + History use the user’s exact designs.",
-    "User provided the intended final thumb SVG filenames to embed into the React inline SVG components: `thumb-up.svg` and `thumb-down.svg` (Today + History thumbs only)."
+    "Weekly summary is calendar week (Mon–Sun), not rolling 7 days."
   ],
   "known_issues": [
     "Intermittent issue where the app appears unstyled (raw HTML buttons) until a page reload; likely related to PWA/service worker cache or asset loading timing.",
@@ -512,23 +553,7 @@
     "Thumb icon regression persists; user requests reverting to the previous known-good thumb asset setup instead of continuing with more complex caching-bypass approaches.",
     "Ongoing thumb icon asset replacement/caching issue: user is unsure whether the current generated thumbs under `frontend/public/assets/generated/thumbs-*.dim_128x128.png` are the ones they supplied; user will reupload their versions to ensure the correct thumbs are used.",
     "Broken thumb images now display as broken-image icons; indicates old thumb assets were deleted but the app is referencing incorrect/non-existent paths for the new uploaded thumb files (asset path mismatch).",
-    "Thumb images are currently broken (broken-image icons) on both Today and History screens after deleting old thumbs and attempting to wire reuploaded ones; indicates incorrect/non-existent asset paths for the new uploaded thumb files.",
-    "After Draft Version 16, thumb icons are still broken-image placeholders on both Today and History screens (thumb asset paths/filenames still mismatched despite reupload and attempted rewiring).",
-    "User uploaded `thumbs-up.png` and `thumbs-down.png`, but the app is currently referencing `/assets/generated/thumbs-up.dim_128x128.png` in the rendered HTML; likely filename/path mismatch between uploaded assets and code-referenced `*.dim_128x128.png` paths causing broken thumbs.",
-    "After Draft Version 17, thumb images are still not loading (still broken/missing) despite aligning code to `/assets/generated/thumbs-up.dim_128x128.png` and attempting to rename/move uploaded `thumbs-up.png`/`thumbs-down.png` to match.",
-    "After Draft Version 17, thumbs are still broken-image icons everywhere (Today + History and any other thumb locations) even after fully closing/reopening the app; indicates asset files still not present at the exact referenced paths and/or service-worker caching is still serving missing assets.",
-    "Thumb images are still broken (broken-image icons) after Draft Version 18.",
-    "Build/deploy blocked by an internal configuration error in the Caffeine build system (\"Internal configuration problem encountered. Please report this to the Caffeine team.\").",
-    "After latest attempt, onboarding slide images are displaying correctly, but thumb icons are still broken/missing (broken-image icons) on Today + History; indicates remaining thumb asset path mismatch and/or caching issue specific to thumbs.",
-    "After Version 19, onboarding slide images load correctly but thumb icons are still broken/missing (broken-image icons) on Today + History; user asks whether to switch to SVGs.",
-    "As of Version 19, onboarding slide images display correctly but thumb icons are still broken/missing on Today + History; proceed with switching thumbs to user-supplied inline SVG components.",
-    "As of Version 19, onboarding slide images display correctly but thumb icons are still broken/missing on Today + History; next step is to replace thumbs PNGs with the user-uploaded inline SVGs (Today + History only).",
-    "SVG thumbs update build failed with Caffeine error: \"Our AI couldn't handle that request. Consider making it clearer or simpler.\" (retry requested).",
-    "After deploying Version 20, thumb icons are visible via inline SVG components but are not the user's provided thumb designs (likely incorrect SVG source wired/embedded).",
-    "After Version 20, thumbs render via inline SVG but are still not the user’s designs; user prefers re-uploading the correct SVG files (rather than pasting SVG code) to be embedded into the React components.",
-    "User reports deployed inline SVG thumbs are visible but not the user-provided designs (likely placeholders/generated SVGs were embedded instead of the uploaded files).",
-    "Correct thumb SVG assets have (reportedly) been uploaded by the user, but the app still needs to embed/wire those exact uploaded files into the inline SVG thumb components (current deployed SVG thumbs are not the user’s designs).",
-    "User confirmed the correct thumb SVG filenames are `thumb-up.svg` and `thumb-down.svg`; app still needs to wire/embed these exact uploaded files into the ThumbsUpIcon/ThumbsDownIcon components so the rendered thumbs match the user’s designs."
+    "Thumb images are currently broken (broken-image icons) on both Today and History screens after deleting old thumbs and attempting to wire reuploaded ones; indicates incorrect/non-existent asset paths for the new uploaded thumb files."
   ],
   "isFixRequest": true,
   "generatedImages": [
